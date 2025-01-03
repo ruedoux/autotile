@@ -1,0 +1,3 @@
+[submodule "modules/gamecore"]
+	path = modules/gamecore
+	url = https://github.com/ruedoux/gamecore.git
