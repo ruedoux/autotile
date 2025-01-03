@@ -1,10 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  
+
   <ItemGroup>
-    <ProjectReference Include="..\modules\gamecore\lib\gamecore.csproj" />
+    <ProjectReference Include="..\lib\Autotile.csproj" />
   </ItemGroup>
-  
+
   <PropertyGroup>
+    <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -12,6 +13,7 @@
     <NoWarn>NU1605</NoWarn>
     <IsAotCompatible>true</IsAotCompatible>
     <PublishAOT>true</PublishAOT>
+    <PublishTrimmed>false</PublishTrimmed>
   </PropertyGroup>
 
 </Project>
