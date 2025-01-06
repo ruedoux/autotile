@@ -8,21 +8,21 @@ namespace AutoTile;
   Converters = new Type[] { typeof(Vector2IntImmutableDictionaryConverter<byte>) },
   DefaultIgnoreCondition = JsonIgnoreCondition.Never,
   IncludeFields = true)]
-[JsonSerializable(typeof(AutotileConfig))]
+[JsonSerializable(typeof(AutoTileConfig))]
 public partial class AutotileConfigJsonContext : JsonSerializerContext { }
 
-public class AutotileConfig : JsonSerializable
+public class AutoTileConfig : JsonSerializable
 {
   public int TileSize { get; private set; }
   public ImmutableDictionary<string, TileDefinition> TileDefinitions { get; private set; }
   public ImmutableDictionary<string, ImmutableDictionary<Vector2Int, byte>> BitmaskSets { get; private set; }
 
   [JsonConstructor]
-  public AutotileConfig(
+  public AutoTileConfig(
     int tileSize,
     ImmutableDictionary<string, TileDefinition> tileDefinitions,
     ImmutableDictionary<string, ImmutableDictionary<Vector2Int, byte>> bitmaskSets
-  ) : base(AutotileConfigJsonContext.Default.AutotileConfig)
+  ) : base(AutotileConfigJsonContext.Default.AutoTileConfig)
   {
     TileSize = tileSize;
     TileDefinitions = tileDefinitions;
@@ -31,7 +31,7 @@ public class AutotileConfig : JsonSerializable
     IntegrityAssertion();
   }
 
-  public static AutotileConfig Construct(
+  public static AutoTileConfig Construct(
     int tileSize,
     Dictionary<string, TileDefinition> tileDefinitions,
     Dictionary<string, Dictionary<Vector2Int, byte>> bitmaskSets)
@@ -42,8 +42,8 @@ public class AutotileConfig : JsonSerializable
       bitmaskSets.ToImmutableDictionary(entry => entry.Key, entry => entry.Value.ToImmutableDictionary()));
   }
 
-  public static AutotileConfig LoadFromFile(string path)
-    => LoadObjectFromFile(path, AutotileConfigJsonContext.Default.AutotileConfig);
+  public static AutoTileConfig LoadFromFile(string path)
+    => LoadObjectFromFile(path, AutotileConfigJsonContext.Default.AutoTileConfig);
 
   private void IntegrityAssertion()
   {

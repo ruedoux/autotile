@@ -15,12 +15,12 @@ public class TileLoader
   private static readonly string[] IMAGE_EXTENSIONS = new string[2] { "png", "jpg" };
 
   private readonly string imageDirectoryPath;
-  private readonly AutotileConfig autotileConfig;
+  private readonly AutoTileConfig autotileConfig;
   private readonly Dictionary<string, int> tileNameToIds;
 
   public TileLoader(
     string imageDirectoryPath,
-    AutotileConfig autotileConfig,
+    AutoTileConfig autotileConfig,
     Dictionary<string, int> tileNameToIds)
   {
     this.imageDirectoryPath = imageDirectoryPath;

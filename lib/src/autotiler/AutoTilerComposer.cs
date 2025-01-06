@@ -3,11 +3,11 @@ namespace AutoTile;
 public class AutoTilerComposer
 {
   public readonly TileLoader TileLoader;
-  private readonly AutotileConfig autotileConfig;
+  private readonly AutoTileConfig autotileConfig;
 
   public AutoTilerComposer(
     string imageDirectoryPath,
-    AutotileConfig autotileConfig,
+    AutoTileConfig autotileConfig,
     Dictionary<string, int> tileNameToIds)
   {
     this.autotileConfig = autotileConfig;
