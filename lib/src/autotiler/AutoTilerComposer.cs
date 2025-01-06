@@ -3,21 +3,21 @@ namespace AutoTile;
 public class AutoTilerComposer
 {
   public readonly TileLoader TileLoader;
-  private readonly AutoTileConfig autotileConfig;
+  private readonly AutoTileConfig autoTileConfig;
 
   public AutoTilerComposer(
     string imageDirectoryPath,
-    AutoTileConfig autotileConfig,
+    AutoTileConfig autoTileConfig,
     Dictionary<string, int> tileNameToIds)
   {
-    this.autotileConfig = autotileConfig;
+    this.autoTileConfig = autoTileConfig;
 
-    TileLoader = new(imageDirectoryPath, autotileConfig, tileNameToIds);
+    TileLoader = new(imageDirectoryPath, autoTileConfig, tileNameToIds);
   }
 
   public AutoTiler GetAutoTiler()
   {
-    var biggestLayer = autotileConfig.TileDefinitions
+    var biggestLayer = autoTileConfig.TileDefinitions
       .DistinctBy(e => e.Value.Layer)
       .OrderByDescending(e => e.Value.Layer)
       .FirstOrDefault().Value.Layer;
@@ -28,17 +28,17 @@ public class AutoTilerComposer
   private static AutoTileData[] GetAutoTileData(Dictionary<TileIdentificator, TileResource> tiles)
   {
     var autoTileIdToTileDatas = new AutoTileData[tiles.Count];
-    Dictionary<int, bool[]> autotileGroupToConnections = new();
+    Dictionary<int, bool[]> autoTileGroupToConnections = new();
 
     foreach (var (_, tileResource) in tiles)
-      autotileGroupToConnections[tileResource.AutoTileGroup] = new bool[tiles.Count];
+      autoTileGroupToConnections[tileResource.AutoTileGroup] = new bool[tiles.Count];
 
     foreach (var (TileIdentificator, tileResource) in tiles)
-      autotileGroupToConnections[tileResource.AutoTileGroup][TileIdentificator.TileId] = true;
+      autoTileGroupToConnections[tileResource.AutoTileGroup][TileIdentificator.TileId] = true;
 
     foreach (var (TileIdentificator, tileResource) in tiles)
       autoTileIdToTileDatas[TileIdentificator.TileId] = new(
-        autotileGroupToConnections[tileResource.AutoTileGroup], tileResource.BitmaskMap);
+        autoTileGroupToConnections[tileResource.AutoTileGroup], tileResource.BitmaskMap);
 
     return autoTileIdToTileDatas;
   }

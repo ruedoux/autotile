@@ -9,7 +9,7 @@ namespace AutoTile;
   DefaultIgnoreCondition = JsonIgnoreCondition.Never,
   IncludeFields = true)]
 [JsonSerializable(typeof(AutoTileConfig))]
-public partial class AutotileConfigJsonContext : JsonSerializerContext { }
+public partial class AutoTileConfigJsonContext : JsonSerializerContext { }
 
 public class AutoTileConfig : JsonSerializable
 {
@@ -22,7 +22,7 @@ public class AutoTileConfig : JsonSerializable
     int tileSize,
     ImmutableDictionary<string, TileDefinition> tileDefinitions,
     ImmutableDictionary<string, ImmutableDictionary<Vector2Int, byte>> bitmaskSets
-  ) : base(AutotileConfigJsonContext.Default.AutoTileConfig)
+  ) : base(AutoTileConfigJsonContext.Default.AutoTileConfig)
   {
     TileSize = tileSize;
     TileDefinitions = tileDefinitions;
@@ -43,12 +43,12 @@ public class AutoTileConfig : JsonSerializable
   }
 
   public static AutoTileConfig LoadFromFile(string path)
-    => LoadObjectFromFile(path, AutotileConfigJsonContext.Default.AutoTileConfig);
+    => LoadObjectFromFile(path, AutoTileConfigJsonContext.Default.AutoTileConfig);
 
   private void IntegrityAssertion()
   {
     foreach (var (name, tileDefinition) in TileDefinitions)
       if (!BitmaskSets.ContainsKey(tileDefinition.BitmaskName))
-        throw new ArgumentException($"Missing required bitmask: '{tileDefinition.BitmaskName}' in autotileConfig");
+        throw new ArgumentException($"Missing required bitmask: '{tileDefinition.BitmaskName}' in autoTileConfig");
   }
 }

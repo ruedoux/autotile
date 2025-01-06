@@ -2,7 +2,7 @@ using AutoTile;
 using GameCore;
 using SimpleTest;
 
-namespace AutotileTests;
+namespace AutoTileTests;
 
 [SimpleTestClass]
 public class AutoTilerTest

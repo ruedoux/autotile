@@ -1,7 +1,7 @@
 using AutoTile;
 using GameCore;
 
-namespace AutotileTests;
+namespace AutoTileTests;
 
 
 class MockedTileMapDrawer : ITileMapDrawer

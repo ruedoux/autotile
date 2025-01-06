@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using SimpleTest;
 
-namespace AutotileTests;
+namespace AutoTileTests;
 
 public static class Ansi
 {

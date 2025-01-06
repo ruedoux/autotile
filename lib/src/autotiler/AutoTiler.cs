@@ -10,10 +10,10 @@ public class AutoTiler
   public static readonly Vector2Int[] CELL_SURROUNDING_DIRECTIONS = new Vector2Int[] {
       Vector2Int.TopLeft, Vector2Int.Top, Vector2Int.TopRight, Vector2Int.Right, Vector2Int.BottomRight, Vector2Int.Bottom, Vector2Int.BottomLeft, Vector2Int.Left };
 
-  private readonly AutoTileData[] tileIdToAutotileData;
+  private readonly AutoTileData[] tileIdToAutoTileData;
   private readonly ConcurrentDictionary<Vector2Int, TileData>[] data;
 
-  public AutoTiler(int layerCount, AutoTileData[] tileIdToAutotileData)
+  public AutoTiler(int layerCount, AutoTileData[] tileIdToAutoTileData)
   {
     if (layerCount < 1)
       throw new ArgumentException($"Layer count must be higher than 1, given: {layerCount}");
@@ -22,7 +22,7 @@ public class AutoTiler
     for (int layer = 0; layer < data.Length; layer++)
       data[layer] = new();
 
-    this.tileIdToAutotileData = tileIdToAutotileData;
+    this.tileIdToAutoTileData = tileIdToAutoTileData;
   }
 
   public void Clear()
@@ -59,7 +59,7 @@ public class AutoTiler
 
       var bitmask = GetTileBitmask(layer, position);
       data[layer][position] = new(
-        tileId, bitmask, tileIdToAutotileData[tileId].GetAtlasCoords(Bitmask.Parse(bitmask)));
+        tileId, bitmask, tileIdToAutoTileData[tileId].GetAtlasCoords(Bitmask.Parse(bitmask)));
     }
 
     for (int i = 0; i < CELL_SURROUNDING_DIRECTIONS.Length; i++)
@@ -74,12 +74,12 @@ public class AutoTiler
       return;
 
     TileData? centerTile = GetTileDataAt(layer, centerPosition);
-    bool canConnect = centerTile is not null && tileIdToAutotileData[tileToUpdate.TileId].CanConnectTo(centerTile.TileId);
+    bool canConnect = centerTile is not null && tileIdToAutoTileData[tileToUpdate.TileId].CanConnectTo(centerTile.TileId);
     var bitmask = Bitmask.UpdateBitmask(tileToUpdate.Bitmask, updateDirection, canConnect);
     data[layer][updatePosition] = new(
       tileToUpdate.TileId,
       bitmask,
-      tileIdToAutotileData[tileToUpdate.TileId].GetAtlasCoords(Bitmask.Parse(bitmask)));
+      tileIdToAutoTileData[tileToUpdate.TileId].GetAtlasCoords(Bitmask.Parse(bitmask)));
   }
 
   private byte GetTileBitmask(int layer, Vector2Int position)
@@ -96,7 +96,7 @@ public class AutoTiler
       if (tileData is null)
         continue;
 
-      bitmaskArr[i] = tileIdToAutotileData[centerTile.TileId].CanConnectTo(tileData.TileId);
+      bitmaskArr[i] = tileIdToAutoTileData[centerTile.TileId].CanConnectTo(tileData.TileId);
     }
 
     return Bitmask.FromArray(bitmaskArr);
@@ -111,8 +111,8 @@ public class AutoTiler
 
   private void ValidateTileId(int tileId)
   {
-    if (tileIdToAutotileData.Length <= tileId)
-      throw new ArgumentException($"Tile of id does not exist: {tileId}, max tile id is: {tileIdToAutotileData.Length}");
+    if (tileIdToAutoTileData.Length <= tileId)
+      throw new ArgumentException($"Tile of id does not exist: {tileId}, max tile id is: {tileIdToAutoTileData.Length}");
   }
 
   private void ValidateLayer(int layer)
