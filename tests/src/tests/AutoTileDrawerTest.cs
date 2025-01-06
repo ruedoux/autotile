@@ -1,4 +1,4 @@
-using Autotile;
+using AutoTile;
 using GameCore;
 using SimpleTest;
 
@@ -6,7 +6,7 @@ namespace AutotileTests;
 
 
 [SimpleTestClass]
-public class AutotileDrawerTest
+public class AutoTileDrawerTest
 {
   private static AutoTiler GetMockedAutoTiler(int layerCount)
   {

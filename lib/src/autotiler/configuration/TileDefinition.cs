@@ -1,6 +1,6 @@
 using GameCore;
 
-namespace Autotile;
+namespace AutoTile;
 
 public partial record class TileDefinition(
   int Layer = -1,

@@ -1,6 +1,6 @@
 using GameCore;
 
-namespace Autotile;
+namespace AutoTile;
 
 public interface ITileMapDrawer
 {

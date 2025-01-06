@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\lib\Autotile.csproj" />
+    <ProjectReference Include="..\lib\AutoTile.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

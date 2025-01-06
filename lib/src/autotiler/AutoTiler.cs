@@ -1,7 +1,7 @@
 using System.Collections.Concurrent;
 using GameCore;
 
-namespace Autotile;
+namespace AutoTile;
 
 public sealed record TileData(int TileId, byte Bitmask, Vector2Int AtlasCoords);
 

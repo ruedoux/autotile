@@ -1,4 +1,4 @@
-using Autotile;
+using AutoTile;
 using GameCore;
 
 namespace AutotileTests;

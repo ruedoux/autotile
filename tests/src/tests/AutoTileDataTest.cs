@@ -1,5 +1,5 @@
 using System;
-using Autotile;
+using AutoTile;
 using GameCore;
 using SimpleTest;
 

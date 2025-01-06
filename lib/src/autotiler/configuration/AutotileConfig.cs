@@ -2,7 +2,7 @@ using System.Collections.Immutable;
 using System.Text.Json.Serialization;
 using GameCore;
 
-namespace Autotile;
+namespace AutoTile;
 
 [JsonSourceGenerationOptions(
   Converters = new Type[] { typeof(Vector2IntImmutableDictionaryConverter<byte>) },

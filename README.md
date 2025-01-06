@@ -1,4 +1,4 @@
-# Autotile
+# AutoTile
 
 Implementation of autotile algorithm for tilemaps with json configuration.
 
@@ -20,7 +20,7 @@ Can be added to a project as a git submodule and then referenced using dotnet, e
 git submodule add <link to this repo>
 git submodule update --init --recursive
 cd your/project/path
-dotnet add reference ../path/to/autotile/lib/Autotile.csproj
+dotnet add reference ../path/to/autotile/lib/AutoTile.csproj
 ```
 
 Or can be compiled as a dll and then referenced in the project:
@@ -33,5 +33,5 @@ dotnet build -c Release
 
 # Add dll to the project
 cd /path/to/the/project
-dotnet add package /path/to/compiled/Autotile.dll
+dotnet add package /path/to/compiled/AutoTile.dll
 ```

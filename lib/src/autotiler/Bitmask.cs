@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace Autotile;
+namespace AutoTile;
 
 public static class Bitmask
 {

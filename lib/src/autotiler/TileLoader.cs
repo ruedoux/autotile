@@ -1,6 +1,6 @@
 using GameCore;
 
-namespace Autotile;
+namespace AutoTile;
 
 public record TileIdentificator(int TileId, string TileName);
 public record TileResource(

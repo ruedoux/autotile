@@ -1,4 +1,4 @@
-namespace Autotile;
+namespace AutoTile;
 
 public class AutoTilerComposer
 {
