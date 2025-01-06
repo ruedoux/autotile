@@ -16,7 +16,7 @@ public class TileLoaderTest
   const int TILE1_ID = 0;
   const int TILE2_ID = 1;
 
-  private readonly TileSetConfig tileSetConfig = TileSetConfig.Construct(
+  private readonly AutotileConfig autotileConfig = AutotileConfig.Construct(
       16,
       new() { { TILE1_NAME, new(Layer: TILE1_LAYER, BitmaskName: BITMASK_NAME, ImageFileName: TILE1_NAME) }, { TILE2_NAME, new(Layer: TILE2_LAYER, BitmaskName: BITMASK_NAME, ImageFileName: TILE2_NAME) } },
       new() { { BITMASK_NAME, new() { { Vector2Int.Zero, 0 } } } });
@@ -30,7 +30,7 @@ public class TileLoaderTest
     File.Create(testDirectory.GetRelativePath(TILE2_NAME + ".jpg"));
 
     Dictionary<string, int> tileNameToids = new() { { TILE1_NAME, TILE1_ID }, { TILE2_NAME, TILE2_ID } };
-    TileLoader tileLoader = new(testDirectory.AbsolutePath, tileSetConfig, tileNameToids);
+    TileLoader tileLoader = new(testDirectory.AbsolutePath, autotileConfig, tileNameToids);
 
     // When
     var tiles = tileLoader.LoadTiles();

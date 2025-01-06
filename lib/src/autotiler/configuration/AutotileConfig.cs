@@ -8,21 +8,21 @@ namespace Autotile;
   Converters = new Type[] { typeof(Vector2IntImmutableDictionaryConverter<byte>) },
   DefaultIgnoreCondition = JsonIgnoreCondition.Never,
   IncludeFields = true)]
-[JsonSerializable(typeof(TileSetConfig))]
-public partial class TileSetConfigJsonContext : JsonSerializerContext { }
+[JsonSerializable(typeof(AutotileConfig))]
+public partial class AutotileConfigJsonContext : JsonSerializerContext { }
 
-public class TileSetConfig : JsonSerializable
+public class AutotileConfig : JsonSerializable
 {
   public int TileSize { get; private set; }
   public ImmutableDictionary<string, TileDefinition> TileDefinitions { get; private set; }
   public ImmutableDictionary<string, ImmutableDictionary<Vector2Int, byte>> BitmaskSets { get; private set; }
 
   [JsonConstructor]
-  public TileSetConfig(
+  public AutotileConfig(
     int tileSize,
     ImmutableDictionary<string, TileDefinition> tileDefinitions,
     ImmutableDictionary<string, ImmutableDictionary<Vector2Int, byte>> bitmaskSets
-  ) : base(TileSetConfigJsonContext.Default.TileSetConfig)
+  ) : base(AutotileConfigJsonContext.Default.AutotileConfig)
   {
     TileSize = tileSize;
     TileDefinitions = tileDefinitions;
@@ -31,7 +31,7 @@ public class TileSetConfig : JsonSerializable
     IntegrityAssertion();
   }
 
-  public static TileSetConfig Construct(
+  public static AutotileConfig Construct(
     int tileSize,
     Dictionary<string, TileDefinition> tileDefinitions,
     Dictionary<string, Dictionary<Vector2Int, byte>> bitmaskSets)
@@ -42,10 +42,13 @@ public class TileSetConfig : JsonSerializable
       bitmaskSets.ToImmutableDictionary(entry => entry.Key, entry => entry.Value.ToImmutableDictionary()));
   }
 
+  public static AutotileConfig LoadFromFile(string path)
+    => LoadObjectFromFile(path, AutotileConfigJsonContext.Default.AutotileConfig);
+
   private void IntegrityAssertion()
   {
     foreach (var (name, tileDefinition) in TileDefinitions)
       if (!BitmaskSets.ContainsKey(tileDefinition.BitmaskName))
-        throw new ArgumentException($"Missing required bitmask: '{tileDefinition.BitmaskName}' in tileSetConfig");
+        throw new ArgumentException($"Missing required bitmask: '{tileDefinition.BitmaskName}' in autotileConfig");
   }
 }

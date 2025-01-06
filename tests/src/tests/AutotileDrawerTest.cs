@@ -6,7 +6,7 @@ namespace AutotileTests;
 
 
 [SimpleTestClass]
-public class TileMapApiTest
+public class AutotileDrawerTest
 {
   private static AutoTiler GetMockedAutoTiler(int layerCount)
   {
@@ -34,10 +34,10 @@ public class TileMapApiTest
 
     AutoTiler autoTiler = GetMockedAutoTiler(1);
     MockedTileMapDrawer testTileMapDrawer = new(1);
-    TileMapApi tileMapApi = new(testTileMapDrawer, autoTiler);
+    AutotileDrawer autotileDrawer = new(testTileMapDrawer, autoTiler);
 
     // When
-    tileMapApi.DrawTiles(0, GetMockedPositionsToTileIds(positions, tileId));
+    autotileDrawer.DrawTiles(0, GetMockedPositionsToTileIds(positions, tileId));
 
     // Then
     foreach (var position in positions)
@@ -55,10 +55,10 @@ public class TileMapApiTest
 
     AutoTiler autoTiler = GetMockedAutoTiler(1);
     MockedTileMapDrawer testTileMapDrawer = new(1);
-    TileMapApi tileMapApi = new(testTileMapDrawer, autoTiler);
+    AutotileDrawer autotileDrawer = new(testTileMapDrawer, autoTiler);
 
     // When
-    tileMapApi.DrawTilesAsync(0, GetMockedPositionsToTileIds(positions, tileId));
+    autotileDrawer.DrawTilesAsync(0, GetMockedPositionsToTileIds(positions, tileId));
 
     // Then
     Assertions.AssertAwaitAtMost(100, () => // 100ms is more than enough for 16x16 tiles
@@ -79,11 +79,11 @@ public class TileMapApiTest
 
     AutoTiler autoTiler = GetMockedAutoTiler(1);
     MockedTileMapDrawer testTileMapDrawer = new(1);
-    TileMapApi tileMapApi = new(testTileMapDrawer, autoTiler);
+    AutotileDrawer autotileDrawer = new(testTileMapDrawer, autoTiler);
 
     // When
-    tileMapApi.DrawTilesAsync(0, GetMockedPositionsToTileIds(positions, tileId));
-    tileMapApi.Wait();
+    autotileDrawer.DrawTilesAsync(0, GetMockedPositionsToTileIds(positions, tileId));
+    autotileDrawer.Wait();
 
     // Then
     foreach (var position in positions)

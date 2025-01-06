@@ -8,13 +8,13 @@ public interface ITileMapDrawer
   public void DrawTiles(int tileLayer, KeyValuePair<Vector2Int, TileData?>[] positionsToTileData);
 }
 
-public class TileMapApi
+public class AutotileDrawer
 {
   private readonly ITileMapDrawer tileMapDrawer;
   private readonly AutoTiler autoTiler;
   private readonly HashSet<Task> tasks = new();
 
-  public TileMapApi(ITileMapDrawer tileMapDrawer, AutoTiler autoTiler)
+  public AutotileDrawer(ITileMapDrawer tileMapDrawer, AutoTiler autoTiler)
   {
     this.tileMapDrawer = tileMapDrawer;
     this.autoTiler = autoTiler;

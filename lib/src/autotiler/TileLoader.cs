@@ -15,36 +15,36 @@ public class TileLoader
   private static readonly string[] IMAGE_EXTENSIONS = new string[2] { "png", "jpg" };
 
   private readonly string imageDirectoryPath;
-  private readonly TileSetConfig tileSetConfig;
+  private readonly AutotileConfig autotileConfig;
   private readonly Dictionary<string, int> tileNameToIds;
 
   public TileLoader(
     string imageDirectoryPath,
-    TileSetConfig tileSetConfig,
+    AutotileConfig autotileConfig,
     Dictionary<string, int> tileNameToIds)
   {
     this.imageDirectoryPath = imageDirectoryPath;
-    this.tileSetConfig = tileSetConfig;
+    this.autotileConfig = autotileConfig;
     this.tileNameToIds = tileNameToIds;
   }
 
   public Dictionary<TileIdentificator, TileResource> LoadTiles()
   {
-    if (tileSetConfig.TileDefinitions.Count != tileNameToIds.Count)
-      throw new ArgumentException($"TileSetConfig defined tiles count should be equal to passed name to id dict: {tileSetConfig.TileDefinitions.Count} != {tileNameToIds.Count}");
+    if (autotileConfig.TileDefinitions.Count != tileNameToIds.Count)
+      throw new ArgumentException($"TileSetConfig defined tiles count should be equal to passed name to id dict: {autotileConfig.TileDefinitions.Count} != {tileNameToIds.Count}");
 
     if (!Directory.Exists(imageDirectoryPath))
       throw new DirectoryNotFoundException($"Directory does not exist: {imageDirectoryPath}");
 
     Dictionary<TileIdentificator, TileResource> tiles = new();
     Dictionary<string, string> imageNamesToPaths = GetImageNamesToPaths(imageDirectoryPath);
-    foreach (var (tileName, tileDefinition) in tileSetConfig.TileDefinitions)
+    foreach (var (tileName, tileDefinition) in autotileConfig.TileDefinitions)
     {
       if (!imageNamesToPaths.TryGetValue(tileDefinition.ImageFileName, out string? imagePath))
         throw new ArgumentException($"Missing required tile set image: '{tileDefinition.ImageFileName}' in path: '{imageDirectoryPath}'");
 
-      if (!tileSetConfig.BitmaskSets.TryGetValue(tileDefinition.BitmaskName, out var bitmask))
-        throw new ArgumentException($"Missing required bitmask: '{tileDefinition.BitmaskName}' in tileSetConfig");
+      if (!autotileConfig.BitmaskSets.TryGetValue(tileDefinition.BitmaskName, out var bitmask))
+        throw new ArgumentException($"Missing required bitmask: '{tileDefinition.BitmaskName}' in autotileConfig");
 
       tiles[new(tileNameToIds[tileName], tileName)] = new(
         imagePath, tileDefinition.Layer, new(bitmask), tileDefinition.AutoTileGroup);

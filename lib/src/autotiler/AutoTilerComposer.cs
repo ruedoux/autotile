@@ -3,21 +3,21 @@ namespace Autotile;
 public class AutoTilerComposer
 {
   public readonly TileLoader TileLoader;
-  private readonly TileSetConfig tileSetConfig;
+  private readonly AutotileConfig autotileConfig;
 
   public AutoTilerComposer(
     string imageDirectoryPath,
-    TileSetConfig tileSetConfig,
+    AutotileConfig autotileConfig,
     Dictionary<string, int> tileNameToIds)
   {
-    this.tileSetConfig = tileSetConfig;
+    this.autotileConfig = autotileConfig;
 
-    TileLoader = new(imageDirectoryPath, tileSetConfig, tileNameToIds);
+    TileLoader = new(imageDirectoryPath, autotileConfig, tileNameToIds);
   }
 
   public AutoTiler GetAutoTiler()
   {
-    var biggestLayer = tileSetConfig.TileDefinitions
+    var biggestLayer = autotileConfig.TileDefinitions
       .DistinctBy(e => e.Value.Layer)
       .OrderByDescending(e => e.Value.Layer)
       .FirstOrDefault().Value.Layer;
