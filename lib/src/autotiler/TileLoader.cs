@@ -12,8 +12,7 @@ public record TileResource(
 
 public class TileLoader
 {
-  private static readonly string[] IMAGE_EXTENSIONS = new string[2] { "png", "jpg" };
-
+  private static readonly string[] filters = new string[] { "*" };
   private readonly string imageDirectoryPath;
   private readonly AutoTileConfig autoTileConfig;
   private readonly Dictionary<string, int> tileNameToIds;
@@ -37,11 +36,11 @@ public class TileLoader
       throw new DirectoryNotFoundException($"Directory does not exist: {imageDirectoryPath}");
 
     Dictionary<TileIdentificator, TileResource> tiles = new();
-    Dictionary<string, string> imageNamesToPaths = GetImageNamesToPaths(imageDirectoryPath);
+    Dictionary<string, string> fileNamesToPaths = GetFileNamesToPaths(imageDirectoryPath);
     foreach (var (tileName, tileDefinition) in autoTileConfig.TileDefinitions)
     {
-      if (!imageNamesToPaths.TryGetValue(tileDefinition.ImageFileName, out string? imagePath))
-        throw new ArgumentException($"Missing required tile set image: '{tileDefinition.ImageFileName}' in path: '{imageDirectoryPath}'");
+      if (!fileNamesToPaths.TryGetValue(tileDefinition.ImageFileName, out string? imagePath))
+        throw new ArgumentException($"Missing required image: '{tileDefinition.ImageFileName}' in path: '{imageDirectoryPath}'");
 
       if (!autoTileConfig.BitmaskSets.TryGetValue(tileDefinition.BitmaskName, out var bitmask))
         throw new ArgumentException($"Missing required bitmask: '{tileDefinition.BitmaskName}' in autoTileConfig");
@@ -56,11 +55,11 @@ public class TileLoader
     return tiles;
   }
 
-  private static Dictionary<string, string> GetImageNamesToPaths(string imageDirectoryPath)
+  private static Dictionary<string, string> GetFileNamesToPaths(string imageDirectoryPath)
   {
-    var imagePaths = FileSystem.GetFilesFromDirectory(imageDirectoryPath, IMAGE_EXTENSIONS, true);
+    var imagePaths = FileSystem.GetFilesFromDirectory(imageDirectoryPath, filters, true);
     return imagePaths.ToDictionary(
-      p => Path.GetFileNameWithoutExtension(p), p => p);
+      p => Path.GetFileName(p), p => p);
   }
 
   private static Dictionary<Vector2Int, byte> ShiftBitmask(Dictionary<Vector2Int, byte> bitmask, Vector2Int positionInSet)

@@ -2,7 +2,7 @@ using GameCore;
 
 namespace AutoTile;
 
-public partial record class TileDefinition(
+public record class TileDefinition(
   int Layer = -1,
   string ImageFileName = "<Null>",
   string BitmaskName = "<Null>",

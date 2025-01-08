@@ -5,7 +5,7 @@ using GameCore;
 namespace AutoTile;
 
 [JsonSourceGenerationOptions(
-  Converters = new Type[] { typeof(Vector2IntImmutableDictionaryConverter<byte>) },
+  Converters = new Type[] { typeof(Vector2IntImmutableDictionaryConverter<byte>), typeof(Vector2IntConverter) },
   DefaultIgnoreCondition = JsonIgnoreCondition.Never,
   IncludeFields = true)]
 [JsonSerializable(typeof(AutoTileConfig))]

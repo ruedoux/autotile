@@ -11,6 +11,8 @@ public class TileLoaderTest
   const string BITMASK_NAME = "bitmask";
   const string TILE1_NAME = "name1";
   const string TILE2_NAME = "name2";
+  const string IMAGE1_NAME = "name1.jpg";
+  const string IMAGE2_NAME = "name2.jpg";
   const int TILE1_LAYER = 0;
   const int TILE2_LAYER = 1;
   const int TILE1_ID = 0;
@@ -18,7 +20,7 @@ public class TileLoaderTest
 
   private readonly AutoTileConfig autoTileConfig = AutoTileConfig.Construct(
       16,
-      new() { { TILE1_NAME, new(Layer: TILE1_LAYER, BitmaskName: BITMASK_NAME, ImageFileName: TILE1_NAME) }, { TILE2_NAME, new(Layer: TILE2_LAYER, BitmaskName: BITMASK_NAME, ImageFileName: TILE2_NAME) } },
+      new() { { TILE1_NAME, new(Layer: TILE1_LAYER, BitmaskName: BITMASK_NAME, ImageFileName: IMAGE1_NAME) }, { TILE2_NAME, new(Layer: TILE2_LAYER, BitmaskName: BITMASK_NAME, ImageFileName: IMAGE2_NAME) } },
       new() { { BITMASK_NAME, new() { { Vector2Int.Zero, 0 } } } });
 
   [SimpleTestMethod]
@@ -26,8 +28,8 @@ public class TileLoaderTest
   {
     // Given
     using SimpleTestDirectory testDirectory = new();
-    File.Create(testDirectory.GetRelativePath(TILE1_NAME + ".jpg"));
-    File.Create(testDirectory.GetRelativePath(TILE2_NAME + ".jpg"));
+    File.Create(testDirectory.GetRelativePath(IMAGE1_NAME));
+    File.Create(testDirectory.GetRelativePath(IMAGE2_NAME));
 
     Dictionary<string, int> tileNameToids = new() { { TILE1_NAME, TILE1_ID }, { TILE2_NAME, TILE2_ID } };
     TileLoader tileLoader = new(testDirectory.AbsolutePath, autoTileConfig, tileNameToids);
