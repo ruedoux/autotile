@@ -47,7 +47,10 @@ public class TileLoader
         throw new ArgumentException($"Missing required bitmask: '{tileDefinition.BitmaskName}' in autoTileConfig");
 
       tiles[new(tileNameToIds[tileName], tileName)] = new(
-        imagePath, tileDefinition.Layer, new(bitmask), tileDefinition.AutoTileGroup);
+        imagePath,
+        tileDefinition.Layer,
+        ShiftBitmask(new(bitmask), tileDefinition.PositionInSet),
+        tileDefinition.AutoTileGroup);
     }
 
     return tiles;
@@ -59,4 +62,9 @@ public class TileLoader
     return imagePaths.ToDictionary(
       p => Path.GetFileNameWithoutExtension(p), p => p);
   }
+
+  private static Dictionary<Vector2Int, byte> ShiftBitmask(Dictionary<Vector2Int, byte> bitmask, Vector2Int positionInSet)
+    => bitmask
+        .Select(kv => new KeyValuePair<Vector2Int, byte>(kv.Key + positionInSet, kv.Value))
+        .ToDictionary();
 }
