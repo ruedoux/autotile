@@ -14,21 +14,26 @@ Wrote tests for most important parts of the library to ensure they work as expec
 
 ## Installation
 
-Can be added to a project as a git submodule and then referenced using dotnet, example:
+### Manual reference to .csproj for git project
+
+Add the submodule outside of your .csproj file, example:
 
 ```bash
-git submodule add <link to this repo>
+# Add submodule to your project
+git submodule add https://github.com/ruedoux/autotile
 git submodule update --init --recursive
-cd your/project/path
-dotnet add reference ../path/to/autotile/lib/AutoTile.csproj
+
+# Go to your main project path and reference the submodule
+cd /your/project/path
+dotnet add reference ../path/to/gamecore/lib/AutoTile.csproj
 ```
 
-Or can be compiled as a dll and then referenced in the project:
+### Manual reference to dll
 
 ```bash
 # Create release .dll
-git clone <link to this repo>
-cd autotile/lib
+git clone https://github.com/ruedoux/autotile
+cd gamecore/lib
 dotnet build -c Release
 
 # Add dll to the project
