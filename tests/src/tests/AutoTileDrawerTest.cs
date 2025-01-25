@@ -1,6 +1,6 @@
+using System.Numerics;
 using Qwaitumin.AutoTile;
-using Qwaitumin.GameCore;
-
+using Qwaitumin.SimpleTest;
 
 namespace Qwaitumin.AutoTileTests;
 
@@ -10,14 +10,14 @@ public class AutoTileDrawerTest
 {
   private static AutoTiler GetMockedAutoTiler(uint layerCount)
   {
-    AutoTileData autoTileData = new(new bool[] { true }, new Dictionary<byte, Vector2Int>[] { new() });
+    AutoTileData autoTileData = new(new bool[] { true }, new Dictionary<byte, Vector2>[] { new() });
     return new(layerCount, new AutoTileData[] { autoTileData });
   }
 
-  private static KeyValuePair<Vector2Int, int>[] GetMockedPositionsToTileIds(
-    Vector2Int[] positions, int tileId)
+  private static KeyValuePair<Vector2, int>[] GetMockedPositionsToTileIds(
+    Vector2[] positions, int tileId)
   {
-    List<KeyValuePair<Vector2Int, int>> positionsToTileIds = new();
+    List<KeyValuePair<Vector2, int>> positionsToTileIds = new();
     foreach (var position in positions)
       positionsToTileIds.Add(new(position, tileId));
 
@@ -29,7 +29,7 @@ public class AutoTileDrawerTest
   {
     // Given
     int tileId = 0;
-    Vector2Int[] positions = GetVector2Rectangle(Vector2Int.Zero, new(16, 16));
+    Vector2[] positions = GetVector2Rectangle(Vector2.Zero, new(16, 16));
 
     AutoTiler autoTiler = GetMockedAutoTiler(1);
     MockedTileMapDrawer testTileMapDrawer = new(1);
@@ -49,7 +49,7 @@ public class AutoTileDrawerTest
   {
     // Given
     int tileId = 0;
-    Vector2Int[] positions = GetVector2Rectangle(Vector2Int.Zero, new(16, 16));
+    Vector2[] positions = GetVector2Rectangle(Vector2.Zero, new(16, 16));
 
     AutoTiler autoTiler = GetMockedAutoTiler(1);
     MockedTileMapDrawer testTileMapDrawer = new(1);
@@ -72,7 +72,7 @@ public class AutoTileDrawerTest
   {
     // Given
     int tileId = 0;
-    Vector2Int[] positions = GetVector2Rectangle(Vector2Int.Zero, new(16, 16));
+    Vector2[] positions = GetVector2Rectangle(Vector2.Zero, new(16, 16));
 
     AutoTiler autoTiler = GetMockedAutoTiler(1);
     MockedTileMapDrawer testTileMapDrawer = new(1);
@@ -88,14 +88,14 @@ public class AutoTileDrawerTest
         tileId, testTileMapDrawer.Data[0][new(position.X, position.Y)].TileId);
   }
 
-  public static Vector2Int[] GetVector2Rectangle(Vector2Int at, Vector2Int size)
+  public static Vector2[] GetVector2Rectangle(Vector2 at, Vector2 size)
   {
-    Vector2Int[] arr = new Vector2Int[size.X * size.Y];
+    Vector2[] arr = new Vector2[(int)(size.X * size.Y)];
 
     int index = 0;
     for (int x = 0; x < size.X; x++)
       for (int y = 0; y < size.Y; y++)
-        arr[index++] = at + new Vector2Int(x, y);
+        arr[index++] = at + new Vector2(x, y);
 
     return arr;
   }

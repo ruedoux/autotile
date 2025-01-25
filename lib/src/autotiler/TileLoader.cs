@@ -1,4 +1,4 @@
-using Qwaitumin.GameCore;
+using System.Numerics;
 
 namespace Qwaitumin.AutoTile;
 
@@ -6,7 +6,7 @@ public record TileIdentificator(int TileId, string TileName);
 public record TileResource(
   string ImagePath,
   uint Layer,
-  Dictionary<byte, Vector2Int>[] TileIdToBitmaskSets,
+  Dictionary<byte, Vector2>[] TileIdToBitmaskSets,
   int AutoTileGroup);
 
 
@@ -62,7 +62,7 @@ public class TileLoader
     var defaultBitmaskSet = autoTileConfig.BitmaskSets[tileDefinition.BitmaskName];
     var shiftedDefaultBitmaskSet = ShiftBitmask(new(defaultBitmaskSet), tileDefinition.PositionInSet);
 
-    var tileIdToBitmasks = new Dictionary<byte, Vector2Int>[tileIdToTileNames.Length];
+    var tileIdToBitmasks = new Dictionary<byte, Vector2>[tileIdToTileNames.Length];
     for (int i = 0; i < tileIdToBitmasks.Length; i++)
       tileIdToBitmasks[i] = shiftedDefaultBitmaskSet;
 
@@ -77,7 +77,7 @@ public class TileLoader
   }
 
   private void ApplyBitmaskOverrides(
-    TileDefinition tileDefinition, Dictionary<byte, Vector2Int>[] tileIdToBitmaskSets)
+    TileDefinition tileDefinition, Dictionary<byte, Vector2>[] tileIdToBitmaskSets)
   {
     if (tileDefinition.BitmaskOverrides is null)
       return;
@@ -94,8 +94,8 @@ public class TileLoader
     => Directory.GetFiles(imageDirectoryPath, $"*", SearchOption.AllDirectories)
         .ToDictionary(p => Path.GetFileName(p), p => p);
 
-  private static Dictionary<byte, Vector2Int> ShiftBitmask(Dictionary<byte, Vector2Int> bitmaskSet, Vector2Int positionInSet)
+  private static Dictionary<byte, Vector2> ShiftBitmask(Dictionary<byte, Vector2> bitmaskSet, Vector2 positionInSet)
     => bitmaskSet
-        .Select(kv => new KeyValuePair<byte, Vector2Int>(kv.Key, kv.Value + positionInSet))
+        .Select(kv => new KeyValuePair<byte, Vector2>(kv.Key, kv.Value + positionInSet))
         .ToDictionary();
 }

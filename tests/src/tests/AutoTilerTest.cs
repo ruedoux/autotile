@@ -1,7 +1,9 @@
+using System.Numerics;
 using Qwaitumin.AutoTile;
-using Qwaitumin.GameCore;
+using Qwaitumin.SimpleTest;
 
 namespace Qwaitumin.AutoTileTests;
+
 
 [SimpleTestClass]
 public class AutoTilerTest
@@ -19,14 +21,14 @@ public class AutoTilerTest
   public void PlaceTile_CorrectlyPlacesTile_WhenCalled()
   {
     // Given
-    AutoTileData autoTileData = new(new bool[] { true }, new Dictionary<byte, Vector2Int>[] { new() });
+    AutoTileData autoTileData = new(new bool[] { true }, new Dictionary<byte, Vector2>[] { new() });
     AutoTiler autoTiler = new(1, new AutoTileData[] { autoTileData });
 
     // When
-    autoTiler.PlaceTile(0, Vector2Int.Zero, 0);
-    var tileData = autoTiler.GetTile(0, Vector2Int.Zero);
-    autoTiler.PlaceTile(0, Vector2Int.Zero, -1);
-    var tileDataAfterRemoval = autoTiler.GetTile(0, Vector2Int.Zero);
+    autoTiler.PlaceTile(0, Vector2.Zero, 0);
+    var tileData = autoTiler.GetTile(0, Vector2.Zero);
+    autoTiler.PlaceTile(0, Vector2.Zero, -1);
+    var tileDataAfterRemoval = autoTiler.GetTile(0, Vector2.Zero);
 
     // Then
     Assertions.AssertNull(tileDataAfterRemoval);
@@ -39,10 +41,10 @@ public class AutoTilerTest
   public void PlaceTile_CorrectlyPlacesTiles_WhenCalledAsync()
   {
     // Given
-    AutoTileData autoTileData = new(new bool[] { true }, new Dictionary<byte, Vector2Int>[] { new() });
+    AutoTileData autoTileData = new(new bool[] { true }, new Dictionary<byte, Vector2>[] { new() });
     AutoTiler autoTiler = new(1, new AutoTileData[] { autoTileData });
 
-    List<Vector2Int> positions = new();
+    List<Vector2> positions = new();
     for (int x = 0; x < 10; x++)
       for (int y = 0; y < 10; y++)
         positions.Add(new(x, y));
@@ -76,31 +78,31 @@ public class AutoTilerTest
   public void PlaceTile_CorrectlyUpdatesBitmaskForSingleTile_WhenConnection()
   {
     // Given
-    AutoTileData autoTileData = new(new bool[] { true }, new Dictionary<byte, Vector2Int>[] { new() });
+    AutoTileData autoTileData = new(new bool[] { true }, new Dictionary<byte, Vector2>[] { new() });
     AutoTiler autoTiler = new(1, new AutoTileData[] { autoTileData });
-    HelperAutoTiler helperAutoTiler = new(autoTiler, 0, Vector2Int.Zero);
+    HelperAutoTiler helperAutoTiler = new(autoTiler, 0, Vector2.Zero);
 
     // When
     //Then
-    autoTiler.PlaceTile(0, Vector2Int.Zero, 0);
+    autoTiler.PlaceTile(0, Vector2Directions.Zero, 0);
     helperAutoTiler.AssertBitmaskMatches(
       new byte[] { 0, 0, 0,
                    0, 0, 0,
                    0, 0, 0 });
 
-    autoTiler.PlaceTile(0, Vector2Int.TopLeft, 0);
+    autoTiler.PlaceTile(0, Vector2Directions.TopLeft, 0);
     helperAutoTiler.AssertBitmaskMatches(
       new byte[] { BR, 0, 0,
                    0, TL, 0,
                    0, 0, 0 });
 
-    autoTiler.PlaceTile(0, Vector2Int.Top, 0);
+    autoTiler.PlaceTile(0, Vector2Directions.Top, 0);
     helperAutoTiler.AssertBitmaskMatches(
       new byte[] { BR | RR, LL | BB, 0,
                    0, TL | TT, 0,
                    0, 0, 0 });
 
-    autoTiler.PlaceTile(0, Vector2Int.TopRight, 0);
+    autoTiler.PlaceTile(0, Vector2Directions.TopRight, 0);
     helperAutoTiler.AssertBitmaskMatches(
       new byte[] { RR | BR, LL | BB | RR, LL | BL,
                    0, TL | TT | TR, 0,
@@ -114,34 +116,34 @@ public class AutoTilerTest
     // Given
     AutoTileData autoTileData1 = new(
       new bool[] { true, true },
-      new Dictionary<byte, Vector2Int>[] { new(), new() });
+      new Dictionary<byte, Vector2>[] { new(), new() });
     AutoTileData autoTileData2 = new(
       new bool[] { true, true },
-      new Dictionary<byte, Vector2Int>[] { new(), new() });
+      new Dictionary<byte, Vector2>[] { new(), new() });
     AutoTiler autoTiler = new(1, new AutoTileData[] { autoTileData1, autoTileData2 });
-    HelperAutoTiler helperAutoTiler = new(autoTiler, 0, Vector2Int.Zero);
+    HelperAutoTiler helperAutoTiler = new(autoTiler, 0, Vector2.Zero);
 
     // When
     //Then
-    autoTiler.PlaceTile(0, Vector2Int.Zero, 0);
+    autoTiler.PlaceTile(0, Vector2Directions.Zero, 0);
     helperAutoTiler.AssertBitmaskMatches(
       new byte[] { 0, 0, 0,
                    0, 0, 0,
                    0, 0, 0 });
 
-    autoTiler.PlaceTile(0, Vector2Int.TopLeft, 1);
+    autoTiler.PlaceTile(0, Vector2Directions.TopLeft, 1);
     helperAutoTiler.AssertBitmaskMatches(
       new byte[] { BR, 0, 0,
                    0, TL, 0,
                    0, 0, 0 });
 
-    autoTiler.PlaceTile(0, Vector2Int.Top, 0);
+    autoTiler.PlaceTile(0, Vector2Directions.Top, 0);
     helperAutoTiler.AssertBitmaskMatches(
       new byte[] { BR | RR, LL | BB, 0,
                    0, TL | TT, 0,
                    0, 0, 0 });
 
-    autoTiler.PlaceTile(0, Vector2Int.TopRight, 1);
+    autoTiler.PlaceTile(0, Vector2Directions.TopRight, 1);
     helperAutoTiler.AssertBitmaskMatches(
       new byte[] { RR | BR, LL | BB | RR, LL | BL,
                    0, TL | TT | TR, 0,
@@ -154,22 +156,22 @@ public class AutoTilerTest
     // Given
     AutoTileData autoTileData1 = new(
       new bool[] { true, false },
-      new Dictionary<byte, Vector2Int>[] { new(), new() });
+      new Dictionary<byte, Vector2>[] { new(), new() });
     AutoTileData autoTileData2 = new(
       new bool[] { false, true },
-      new Dictionary<byte, Vector2Int>[] { new(), new() });
+      new Dictionary<byte, Vector2>[] { new(), new() });
     AutoTiler autoTiler = new(1, new AutoTileData[] { autoTileData1, autoTileData2 });
-    HelperAutoTiler helperAutoTiler = new(autoTiler, 0, Vector2Int.Zero);
+    HelperAutoTiler helperAutoTiler = new(autoTiler, 0, Vector2Directions.Zero);
 
     // When
     //Then
-    autoTiler.PlaceTile(0, Vector2Int.Zero, 0);
+    autoTiler.PlaceTile(0, Vector2Directions.Zero, 0);
     helperAutoTiler.AssertBitmaskMatches(
       new byte[] { 0, 0, 0,
                    0, 0, 0,
                    0, 0, 0 });
 
-    autoTiler.PlaceTile(0, Vector2Int.TopLeft, 1);
+    autoTiler.PlaceTile(0, Vector2Directions.TopLeft, 1);
     helperAutoTiler.AssertBitmaskMatches(
       new byte[] { 0, 0, 0,
                    0, 0, 0,
@@ -180,9 +182,9 @@ public class AutoTilerTest
   {
     private readonly AutoTiler autoTiler;
     private readonly int layer;
-    private readonly Vector2Int atPosition;
+    private readonly Vector2 atPosition;
 
-    public HelperAutoTiler(AutoTiler autoTiler, int layer, Vector2Int atPosition)
+    public HelperAutoTiler(AutoTiler autoTiler, int layer, Vector2 atPosition)
     {
       this.autoTiler = autoTiler;
       this.layer = layer;
@@ -194,14 +196,14 @@ public class AutoTilerTest
       Assertions.AssertEqual(9, bitmasks.Length);
 
       var middleTile = autoTiler.GetTile(layer, atPosition);
-      var topLeftTile = autoTiler.GetTile(layer, atPosition + Vector2Int.TopLeft);
-      var topTile = autoTiler.GetTile(layer, atPosition + Vector2Int.Top);
-      var topRightTile = autoTiler.GetTile(layer, atPosition + Vector2Int.TopRight);
-      var rightTile = autoTiler.GetTile(layer, atPosition + Vector2Int.Right);
-      var bottomRightTile = autoTiler.GetTile(layer, atPosition + Vector2Int.BottomRight);
-      var bottomTile = autoTiler.GetTile(layer, atPosition + Vector2Int.Bottom);
-      var bottomLeftTile = autoTiler.GetTile(layer, atPosition + Vector2Int.BottomLeft);
-      var leftTile = autoTiler.GetTile(layer, atPosition + Vector2Int.Left);
+      var topLeftTile = autoTiler.GetTile(layer, atPosition + Vector2Directions.TopLeft);
+      var topTile = autoTiler.GetTile(layer, atPosition + Vector2Directions.Top);
+      var topRightTile = autoTiler.GetTile(layer, atPosition + Vector2Directions.TopRight);
+      var rightTile = autoTiler.GetTile(layer, atPosition + Vector2Directions.Right);
+      var bottomRightTile = autoTiler.GetTile(layer, atPosition + Vector2Directions.BottomRight);
+      var bottomTile = autoTiler.GetTile(layer, atPosition + Vector2Directions.Bottom);
+      var bottomLeftTile = autoTiler.GetTile(layer, atPosition + Vector2Directions.BottomLeft);
+      var leftTile = autoTiler.GetTile(layer, atPosition + Vector2Directions.Left);
 
       VerifyTile(topLeftTile, bitmasks[0]);
       VerifyTile(topTile, bitmasks[1]);

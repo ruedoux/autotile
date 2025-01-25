@@ -17,4 +17,9 @@
     <PublishTrimmed>false</PublishTrimmed>
   </PropertyGroup>
 
+  <!-- Ensure nothing is trimmed by compiler -->
+  <ItemGroup>
+    <TrimmerRootAssembly Include="$(TargetName)" />
+  </ItemGroup>
+
 </Project>

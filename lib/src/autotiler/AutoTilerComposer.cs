@@ -1,5 +1,3 @@
-using Qwaitumin.GameCore;
-
 namespace Qwaitumin.AutoTile;
 
 public class AutoTilerComposer

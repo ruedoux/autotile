@@ -1,24 +1,39 @@
 using System.Collections.Concurrent;
-using Qwaitumin.GameCore;
+using System.Numerics;
+
 
 namespace Qwaitumin.AutoTile;
 
-public sealed record TileData(int TileId, byte Bitmask, Vector2Int AtlasCoords);
+public sealed record TileData(int TileId, byte Bitmask, Vector2 AtlasCoords);
+
+public static class Vector2Directions
+{
+  public static Vector2 Zero => new(0, 0);
+  public static Vector2 One => new(1, 1);
+  public static Vector2 TopLeft => new(-1, -1);
+  public static Vector2 Top => new(0, -1);
+  public static Vector2 TopRight => new(1, -1);
+  public static Vector2 Right => new(1, 0);
+  public static Vector2 BottomRight => new(1, 1);
+  public static Vector2 Bottom => new(0, 1);
+  public static Vector2 BottomLeft => new(-1, 1);
+  public static Vector2 Left => new(-1, 0);
+}
 
 public class AutoTiler
 {
-  public static readonly Vector2Int[] CELL_SURROUNDING_DIRECTIONS = new Vector2Int[] {
-      Vector2Int.TopLeft, Vector2Int.Top, Vector2Int.TopRight, Vector2Int.Right, Vector2Int.BottomRight, Vector2Int.Bottom, Vector2Int.BottomLeft, Vector2Int.Left };
+  public static readonly Vector2[] CELL_SURROUNDING_DIRECTIONS = new Vector2[] {
+      Vector2Directions.TopLeft, Vector2Directions.Top, Vector2Directions.TopRight, Vector2Directions.Right, Vector2Directions.BottomRight, Vector2Directions.Bottom, Vector2Directions.BottomLeft, Vector2Directions.Left };
 
   private readonly AutoTileData[] tileIdToAutoTileData;
-  private readonly ConcurrentDictionary<Vector2Int, TileData>[] data;
+  private readonly ConcurrentDictionary<Vector2, TileData>[] data;
 
   public AutoTiler(uint layerCount, AutoTileData[] tileIdToAutoTileData)
   {
     if (layerCount < 1)
       throw new ArgumentException($"Layer count must be higher than 1, given: {layerCount}");
 
-    data = new ConcurrentDictionary<Vector2Int, TileData>[layerCount];
+    data = new ConcurrentDictionary<Vector2, TileData>[layerCount];
     for (int layer = 0; layer < data.Length; layer++)
       data[layer] = new();
 
@@ -34,19 +49,19 @@ public class AutoTiler
   public int GetLayerCount()
     => data.Length;
 
-  public Vector2Int[] GetAllPositions(int layer)
+  public Vector2[] GetAllPositions(int layer)
   {
     ValidateLayer(layer);
     return data[layer].Keys.ToArray();
   }
 
-  public TileData? GetTile(int layer, Vector2Int position)
+  public TileData? GetTile(int layer, Vector2 position)
   {
     ValidateLayer(layer);
     return GetTileDataAt(layer, position);
   }
 
-  public void PlaceTile(int layer, Vector2Int position, int tileId)
+  public void PlaceTile(int layer, Vector2 position, int tileId)
   {
     ValidateLayer(layer);
     ValidateTileId(tileId);
@@ -55,7 +70,7 @@ public class AutoTiler
       data[layer].TryRemove(position, out _);
     else
     {
-      data[layer][position] = new(tileId, new(), Vector2Int.Zero);
+      data[layer][position] = new(tileId, new(), Vector2.Zero);
 
       var bitmask = GetTileBitmask(layer, position);
       data[layer][position] = new(
@@ -67,9 +82,9 @@ public class AutoTiler
   }
 
   private void UpdateTileBitmaskRelative(
-    int layer, Vector2Int centerPosition, Bitmask.SurroundingDirection updateDirection)
+    int layer, Vector2 centerPosition, Bitmask.SurroundingDirection updateDirection)
   {
-    Vector2Int updatePosition = centerPosition - CELL_SURROUNDING_DIRECTIONS[(int)updateDirection];
+    Vector2 updatePosition = centerPosition - CELL_SURROUNDING_DIRECTIONS[(int)updateDirection];
     if (GetTileDataAt(layer, updatePosition) is not TileData tileToUpdate)
       return;
 
@@ -83,7 +98,7 @@ public class AutoTiler
       tileIdToAutoTileData[tileToUpdate.TileId].GetAtlasCoords(neighbourTileId, Bitmask.Parse(bitmask)));
   }
 
-  private byte GetTileBitmask(int layer, Vector2Int position)
+  private byte GetTileBitmask(int layer, Vector2 position)
   {
     TileData? centerTile = GetTileDataAt(layer, position);
     if (centerTile is null)
@@ -103,7 +118,7 @@ public class AutoTiler
     return Bitmask.FromArray(bitmaskArr);
   }
 
-  private TileData? GetTileDataAt(int layer, Vector2Int position)
+  private TileData? GetTileDataAt(int layer, Vector2 position)
   {
     if (data[layer].TryGetValue(position, out TileData? tileData))
       return tileData;

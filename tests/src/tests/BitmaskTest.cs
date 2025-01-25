@@ -1,8 +1,8 @@
 using Qwaitumin.AutoTile;
-using Qwaitumin.GameCore;
-
+using Qwaitumin.SimpleTest;
 
 namespace Qwaitumin.AutoTileTests;
+
 
 [SimpleTestClass]
 public class BitmaskTest

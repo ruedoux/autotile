@@ -1,5 +1,6 @@
+using System.Numerics;
 using Qwaitumin.AutoTile;
-using Qwaitumin.GameCore;
+using Qwaitumin.SimpleTest;
 
 
 namespace Qwaitumin.AutoTileTests;
@@ -21,7 +22,7 @@ public class TileLoaderTest
   private readonly AutoTileConfig autoTileConfig = AutoTileConfig.Construct(
       16,
       new() { { TILE1_NAME, new(Layer: TILE1_LAYER, BitmaskName: BITMASK_NAME, ImageFileName: IMAGE1_NAME) }, { TILE2_NAME, new(Layer: TILE2_LAYER, BitmaskName: BITMASK_NAME, ImageFileName: IMAGE2_NAME) } },
-      new() { { BITMASK_NAME, new() { { 0, Vector2Int.Zero } } } });
+      new() { { BITMASK_NAME, new() { { 0, Vector2.Zero } } } });
 
   [SimpleTestMethod]
   public void LoadTiles_ShouldCorrectlyLoadTiles_WhenCalled()

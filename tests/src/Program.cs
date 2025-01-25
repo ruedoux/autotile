@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
-using Qwaitumin.GameCore;
+using Qwaitumin.SimpleTest;
+
 
 namespace Qwaitumin.AutoTileTests;
 

@@ -1,8 +1,9 @@
+using System.Numerics;
 using Qwaitumin.AutoTile;
-using Qwaitumin.GameCore;
-
+using Qwaitumin.SimpleTest;
 
 namespace Qwaitumin.AutoTileTests;
+
 
 [SimpleTestClass]
 public class AutoTileDataTest
@@ -13,7 +14,7 @@ public class AutoTileDataTest
     // Given
     AutoTileData autoTileData = new(
       new bool[] { false, true },
-      new Dictionary<byte, Vector2Int>[] { new(), new() });
+      new Dictionary<byte, Vector2>[] { new(), new() });
 
     // When
     var shouldNotConnect = autoTileData.CanConnectTo(0);
@@ -30,14 +31,14 @@ public class AutoTileDataTest
     // Given
     AutoTileData autoTileData = new(
       new bool[] { true },
-      new Dictionary<byte, Vector2Int>[] { new() { { 2, Vector2Int.One } } });
+      new Dictionary<byte, Vector2>[] { new() { { 2, Vector2.One } } });
 
     // When
     var shouldBeOne = autoTileData.GetAtlasCoords(0, 2);
     var shouldBeDefault = autoTileData.GetAtlasCoords(0, 123);
 
     // Then
-    Assertions.AssertEqual(Vector2Int.One, shouldBeOne);
-    Assertions.AssertEqual(Vector2Int.Zero, shouldBeDefault);
+    Assertions.AssertEqual(Vector2.One, shouldBeOne);
+    Assertions.AssertEqual(Vector2.Zero, shouldBeDefault);
   }
 }

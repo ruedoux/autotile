@@ -1,5 +1,5 @@
-using Qwaitumin.GameCore;
 using Qwaitumin.AutoTile;
+using Qwaitumin.SimpleTest;
 
 namespace CoreTests;
 

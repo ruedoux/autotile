@@ -1,17 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <ItemGroup>
-    <Compile Include="..\modules\gamecore\lib\src\*.cs">
-      <Link>src\links\(FileName)%(Extension)</Link>
-    </Compile>
-    <Compile Include="..\modules\gamecore\lib\src\vectors\*.cs">
-      <Link>src\links\vectors\(FileName)%(Extension)</Link>
-    </Compile>
-    <Compile Include="..\modules\gamecore\lib\src\templates\*.cs">
-      <Link>src\links\templates\(FileName)%(Extension)</Link>
-    </Compile>
-  </ItemGroup>
-
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>

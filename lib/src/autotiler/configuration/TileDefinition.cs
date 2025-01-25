@@ -1,14 +1,14 @@
-using Qwaitumin.GameCore;
+using System.Numerics;
 
 namespace Qwaitumin.AutoTile;
 
 public record class TileDefinition(
     uint Layer = 0,
     string ImageFileName = "<NONE>",
-    Vector2Int PositionInSet = default,
+    Vector2 PositionInSet = default,
     string BitmaskName = "<NONE>",
     int AutoTileGroup = 0,
-    Dictionary<string, Dictionary<byte, Vector2Int>>? BitmaskOverrides = null)
+    Dictionary<string, Dictionary<byte, Vector2>>? BitmaskOverrides = null)
 {
   public virtual bool Equals(TileDefinition? other)
   {
@@ -32,8 +32,8 @@ public record class TileDefinition(
       AutoTileGroup, ComputeDictionaryHash(BitmaskOverrides));
 
   private static bool CompareDictionaries(
-      Dictionary<string, Dictionary<byte, Vector2Int>>? first,
-      Dictionary<string, Dictionary<byte, Vector2Int>>? second)
+      Dictionary<string, Dictionary<byte, Vector2>>? first,
+      Dictionary<string, Dictionary<byte, Vector2>>? second)
   {
     if (first == null || second == null)
       return first == second;
@@ -49,7 +49,7 @@ public record class TileDefinition(
   }
 
   private static int ComputeDictionaryHash(
-    Dictionary<string, Dictionary<byte, Vector2Int>>? dict)
+    Dictionary<string, Dictionary<byte, Vector2>>? dict)
   {
     if (dict == null) return 0;
 

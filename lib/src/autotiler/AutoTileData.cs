@@ -1,4 +1,4 @@
-using Qwaitumin.GameCore;
+using System.Numerics;
 
 namespace Qwaitumin.AutoTile;
 
@@ -7,17 +7,17 @@ public class AutoTileData
 {
   private readonly bool[] tileIdConnections;
   private readonly bool[,] tileIdToMappedValues;
-  private readonly Vector2Int[,] tileIdToComputedBitmaskToAtlasCoords;
+  private readonly Vector2[,] tileIdToComputedBitmaskToAtlasCoords;
 
   public AutoTileData(
-    bool[] tileIdConnections, Dictionary<byte, Vector2Int>[] tileIdsToBitmasks)
+    bool[] tileIdConnections, Dictionary<byte, Vector2>[] tileIdsToBitmasks)
   {
     this.tileIdConnections = tileIdConnections;
     if (tileIdConnections.Length != tileIdsToBitmasks.Length)
       throw new ArgumentException($"Provided connection array is not equal to bitmask array {tileIdConnections.Length} != {tileIdsToBitmasks.Length}");
 
     tileIdToMappedValues = new bool[tileIdsToBitmasks.Length, byte.MaxValue + 1];
-    tileIdToComputedBitmaskToAtlasCoords = new Vector2Int[tileIdsToBitmasks.Length, byte.MaxValue + 1];
+    tileIdToComputedBitmaskToAtlasCoords = new Vector2[tileIdsToBitmasks.Length, byte.MaxValue + 1];
     for (int tileId = 0; tileId < tileIdsToBitmasks.Length; tileId++)
     {
       foreach (var (computedBitmask, position) in tileIdsToBitmasks[tileId])
@@ -31,7 +31,7 @@ public class AutoTileData
   public bool CanConnectTo(int tileId)
     => tileIdConnections[tileId];
 
-  public Vector2Int GetAtlasCoords(int neighbourTileId, byte computedBitmask)
+  public Vector2 GetAtlasCoords(int neighbourTileId, byte computedBitmask)
     => tileIdToMappedValues[neighbourTileId, computedBitmask] ?
       tileIdToComputedBitmaskToAtlasCoords[neighbourTileId, computedBitmask] : new(0, 0);
 }
