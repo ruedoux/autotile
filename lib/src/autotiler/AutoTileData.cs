@@ -5,33 +5,25 @@ namespace Qwaitumin.AutoTile;
 // NOTE: This has to work as fast as possible
 public class AutoTileData
 {
+  private static Vector2 DEFAULT_ATLAS_POSITION = Vector2.Zero;
+
   private readonly bool[] tileIdConnections;
-  private readonly bool[,] tileIdToMappedValues;
-  private readonly Vector2[,] tileIdToComputedBitmaskToAtlasCoords;
+  private readonly Vector2[] computedBitmaskToAtlasPosition = new Vector2[byte.MaxValue + 1];
 
   public AutoTileData(
-    bool[] tileIdConnections, Dictionary<byte, Vector2>[] tileIdsToBitmasks)
+    bool[] tileIdConnections,
+    Dictionary<byte, Vector2> bitmaskToAtlasPositions)
   {
     this.tileIdConnections = tileIdConnections;
-    if (tileIdConnections.Length != tileIdsToBitmasks.Length)
-      throw new ArgumentException($"Provided connection array is not equal to bitmask array {tileIdConnections.Length} != {tileIdsToBitmasks.Length}");
-
-    tileIdToMappedValues = new bool[tileIdsToBitmasks.Length, byte.MaxValue + 1];
-    tileIdToComputedBitmaskToAtlasCoords = new Vector2[tileIdsToBitmasks.Length, byte.MaxValue + 1];
-    for (int tileId = 0; tileId < tileIdsToBitmasks.Length; tileId++)
-    {
-      foreach (var (computedBitmask, position) in tileIdsToBitmasks[tileId])
-      {
-        tileIdToComputedBitmaskToAtlasCoords[tileId, computedBitmask] = position;
-        tileIdToMappedValues[tileId, computedBitmask] = true;
-      }
-    }
+    for (int i = 0; i < computedBitmaskToAtlasPosition.Length; i++)
+      computedBitmaskToAtlasPosition[i] = DEFAULT_ATLAS_POSITION;
+    foreach (var (bitmask, atlasPosition) in bitmaskToAtlasPositions)
+      computedBitmaskToAtlasPosition[bitmask] = atlasPosition;
   }
 
   public bool CanConnectTo(int tileId)
     => tileIdConnections[tileId];
 
-  public Vector2 GetAtlasCoords(int neighbourTileId, byte computedBitmask)
-    => tileIdToMappedValues[neighbourTileId, computedBitmask] ?
-      tileIdToComputedBitmaskToAtlasCoords[neighbourTileId, computedBitmask] : new(0, 0);
+  public Vector2 GetAtlasCoords(byte computedBitmask)
+    => computedBitmaskToAtlasPosition[computedBitmask];
 }

@@ -6,7 +6,7 @@ public record TileIdentificator(int TileId, string TileName);
 public record TileResource(
   string ImagePath,
   uint Layer,
-  Dictionary<byte, Vector2>[] TileIdToBitmaskSets,
+  Dictionary<byte, Vector2> BitmaskSet,
   int AutoTileGroup);
 
 
@@ -62,32 +62,12 @@ public class TileLoader
     var defaultBitmaskSet = autoTileConfig.BitmaskSets[tileDefinition.BitmaskName];
     var shiftedDefaultBitmaskSet = ShiftBitmask(new(defaultBitmaskSet), tileDefinition.PositionInSet);
 
-    var tileIdToBitmasks = new Dictionary<byte, Vector2>[tileIdToTileNames.Length];
-    for (int i = 0; i < tileIdToBitmasks.Length; i++)
-      tileIdToBitmasks[i] = shiftedDefaultBitmaskSet;
-
-    ApplyBitmaskOverrides(tileDefinition, tileIdToBitmasks);
-
     return new(
       ImagePath: imagePath,
       Layer: tileDefinition.Layer,
-      TileIdToBitmaskSets: tileIdToBitmasks,
+      BitmaskSet: shiftedDefaultBitmaskSet,
       AutoTileGroup: tileDefinition.AutoTileGroup
     );
-  }
-
-  private void ApplyBitmaskOverrides(
-    TileDefinition tileDefinition, Dictionary<byte, Vector2>[] tileIdToBitmaskSets)
-  {
-    if (tileDefinition.BitmaskOverrides is null)
-      return;
-
-    foreach (var (overrideTileName, bitmaskSet) in tileDefinition.BitmaskOverrides)
-    {
-      int overrideTileId = Array.FindIndex(tileIdToTileNames, name => name == overrideTileName);
-      foreach (var (overrideBitmask, overridePosition) in bitmaskSet)
-        tileIdToBitmaskSets[overrideTileId][overrideBitmask] = overridePosition;
-    }
   }
 
   private static Dictionary<string, string> GetFileNamesToPaths(string imageDirectoryPath)

@@ -1,5 +1,7 @@
 using System.Reflection;
 using System.Diagnostics;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Qwaitumin.SimpleTest;
 
@@ -199,4 +201,283 @@ public sealed class SimpleTestDirectory : IDisposable
   {
     Delete();
   }
+}
+
+public class SimpleTestPrinter
+{
+  static class Ansi
+  {
+    public static readonly string NORMAL = Console.IsOutputRedirected ? "" : "\x1b[39m";
+    public static readonly string RED = Console.IsOutputRedirected ? "" : "\x1b[91m";
+    public static readonly string GREEN = Console.IsOutputRedirected ? "" : "\x1b[92m";
+    public static readonly string BLUE = Console.IsOutputRedirected ? "" : "\x1b[94m";
+    public static readonly string GREY = Console.IsOutputRedirected ? "" : "\x1b[97m";
+  }
+
+  static readonly string PREFIX_RUN = "[RUN]";
+  static readonly string PREFIX_OK = "[OK ]";
+  static readonly string PREFIX_ERROR = "[ERR]";
+
+  private readonly Action<string> printFunction;
+
+  public SimpleTestPrinter(Action<string> printFunction)
+  {
+    this.printFunction = printFunction;
+  }
+
+  public void Run()
+  {
+    SimpleTestRunner simpleTestRunner = new(LogClassBegin, LogClassResult);
+    Stopwatch stopwatch = Stopwatch.StartNew();
+    simpleTestRunner.RunAll();
+    stopwatch.Stop();
+
+    int classesPassed = 0, classesTotal = 0, methodsPassed = 0, methodsTotal = 0;
+    foreach (var classResult in simpleTestRunner.ClassResults)
+    {
+      classesTotal++;
+      if (classResult.Result == Result.SUCCESS) classesPassed++;
+      foreach (var methodResult in classResult.MethodResults)
+      {
+        methodsTotal++;
+        if (methodResult.Result == Result.SUCCESS) methodsPassed++;
+      }
+    }
+
+    string resultText = classesTotal == classesPassed ? AddColorToString("PASS", Ansi.GREEN) : AddColorToString("FAIL", Ansi.RED);
+    printFunction($"""
+    ----------------------
+    {resultText} Classes: {classesPassed}/{classesTotal} Methods: {methodsPassed}/{methodsTotal}
+    Took {FormatTime(stopwatch.ElapsedMilliseconds)}
+    ----------------------
+    """);
+  }
+
+  private void LogClassBegin(Type type)
+    => printFunction($"{AddColorToString(PREFIX_RUN, Ansi.BLUE)} {type.Name}");
+
+  private void LogClassResult(SimpleTestClassResult classResult)
+  {
+    if (classResult.Result == Result.SUCCESS)
+      printFunction($"{AddColorToString(PREFIX_OK, Ansi.GREEN)} {classResult.Name} {AddColorToString(FormatTime(classResult.TookMiliseconds), Ansi.GREY)}");
+    if (classResult.Result == Result.FAIL)
+      printFunction($"{AddColorToString(PREFIX_ERROR, Ansi.RED)} {classResult.Name} {AddColorToString(FormatTime(classResult.TookMiliseconds), Ansi.GREY)}");
+
+    foreach (var methodResult in classResult.MethodResults)
+      LogMethodResult(methodResult);
+  }
+
+  private void LogMethodResult(SimpleTestMethodResult methodResult)
+  {
+    if (methodResult.Result == Result.SUCCESS)
+      printFunction($"-> {AddColorToString(PREFIX_OK, Ansi.GREEN)} {methodResult.Name}");
+    if (methodResult.Result == Result.FAIL)
+    {
+      printFunction($"->{AddColorToString(PREFIX_ERROR, Ansi.RED)} {methodResult.Name}");
+      printFunction(string.Join('\n', methodResult.Messages));
+    }
+  }
+
+  private static string FormatTime(long miliseconds)
+    => $"{miliseconds / 1000}.{miliseconds % 1000}s";
+
+  private static string AddColorToString(string msg, string color)
+    => $"{color}{msg}{Ansi.NORMAL}";
+}
+
+
+public static class Assertions
+{
+  public static void AssertFileExists(string filePath)
+  {
+    if (!File.Exists(filePath))
+      throw new FileNotFoundException($"File doesnt exist: {filePath}");
+  }
+
+  public static void AssertDirectoryExists(string directoryPath)
+  {
+    if (!Directory.Exists(directoryPath))
+      throw new DirectoryNotFoundException($"Directory doesnt exist: {directoryPath}");
+  }
+
+  public static void AssertNotNull<T>([NotNull] T? obj, string additionalMessage = "")
+  {
+    if (obj is null)
+      throw new ArgumentNullException(
+        nameof(obj), $"Argument cannot be null. {additionalMessage}");
+  }
+
+  public static void AssertNull<T>(T? obj, string additionalMessage = "")
+  {
+    if (obj is not null)
+      throw new ArgumentNullException(
+        nameof(obj), $"Argument should be null. {additionalMessage}");
+  }
+
+  public static void AssertTrue(bool shoudlBeTrue, string additionalMessage = "")
+  {
+    if (!shoudlBeTrue)
+    {
+      throw new ValidationException(
+        $"Value is false, but expected true. {additionalMessage}");
+    }
+  }
+
+  public static void AssertFalse(bool shoudlBeFalse, string additionalMessage = "")
+  {
+    if (shoudlBeFalse)
+    {
+      throw new ValidationException(
+        $"Value is true, but expected false. {additionalMessage}");
+    }
+  }
+
+  public static void AssertEqual<T>(
+    T shouldBe, T isNow, string additionalMessage = "")
+  {
+    if (!Equals(shouldBe, isNow))
+    {
+      throw new ValidationException(
+        $"Value is not equal, is: '{isNow}', but should be: '{shouldBe}'. {additionalMessage}");
+    }
+  }
+
+  public static void AssertEqual<T>(
+    IEnumerable<T> shouldBe, IEnumerable<T> isNow, string additionalMessage = "")
+  {
+    if (!Equals(shouldBe, isNow))
+    {
+      throw new ValidationException(
+        $"Value is not equal, is: '{isNow}', but should be: '{shouldBe}'. {additionalMessage}");
+    }
+  }
+
+  public static void AssertNotEqual<T>(
+    T shouldNotBe, T isNow, string additionalMessage = "")
+  {
+    if (Equals(shouldNotBe, isNow))
+    {
+      throw new ValidationException(
+        $"Value is equal to: '{shouldNotBe}'. {additionalMessage}");
+    }
+  }
+
+  public static void AssertLessThan<T>(
+    T value, T maxValue, string additionalMessage = "")
+        where T : IComparable<T>
+  {
+    if (value.CompareTo(maxValue) >= 0)
+    {
+      throw new ValidationException(
+          $"Value '{value}' is not less than '{maxValue}'. {additionalMessage}");
+    }
+  }
+
+  public static void AssertMoreThan<T>(
+    T value, T minValue, string additionalMessage = "")
+      where T : IComparable<T>
+  {
+    if (value.CompareTo(minValue) <= 0)
+    {
+      throw new ValidationException(
+          $"Value '{value}' is not larger than '{minValue}'. {additionalMessage}");
+    }
+  }
+
+  public static void AssertEqualOrLessThan<T>(
+    T value, T maxValue, string additionalMessage = "")
+        where T : IComparable<T>
+  {
+    if (value.CompareTo(maxValue) > 0)
+    {
+      throw new ValidationException(
+          $"Value '{value}' is greater than '{maxValue}'. {additionalMessage}");
+    }
+  }
+
+  public static void AssertEqualOrMoreThan<T>(
+    T value, T minValue, string additionalMessage = "")
+      where T : IComparable<T>
+  {
+    if (value.CompareTo(minValue) < 0)
+    {
+      throw new ValidationException(
+          $"Value '{value}' is less than '{minValue}'. {additionalMessage}");
+    }
+  }
+
+  public static void AssertNotInRange<T>(
+    T value, T minValue, T maxValue, string additionalMessage = "")
+      where T : IComparable<T>
+  {
+    if (value.CompareTo(minValue) >= 0 && value.CompareTo(maxValue) <= 0)
+    {
+      throw new ValidationException(
+          $"Value '{value}' is in range: '{minValue}' - '{maxValue}'. {additionalMessage}");
+    }
+  }
+
+  public static void AssertInRange<T>(
+    T value, T minValue, T maxValue, string additionalMessage = "")
+      where T : IComparable<T>
+  {
+    if (value.CompareTo(minValue) < 0 || value.CompareTo(maxValue) > 0)
+    {
+      throw new ValidationException(
+          $"Value '{value}' is not in range: '{minValue}' - '{maxValue}'. {additionalMessage}");
+    }
+  }
+
+  public static void AssertAwaitAtMost(long timeoutMs, Action action)
+  {
+    Exception trackedException = new("Empty exception");
+    var actionTask = Task.Run(() =>
+    {
+      while (true)
+      {
+        try
+        {
+          action();
+          break;
+        }
+        catch (Exception ex)
+        {
+          trackedException = ex;
+        }
+        Thread.Sleep(10);
+      }
+    });
+
+    var timeoutTask = Task.Delay(TimeSpan.FromMilliseconds(timeoutMs));
+
+    if (Task.WhenAny(actionTask, timeoutTask).Result == timeoutTask)
+      throw new TimeoutException(
+        $"Assertion was not passed in time: {timeoutMs}ms.\n" +
+        $"Reason: {trackedException.Message}\n" +
+        $"{trackedException.StackTrace}");
+
+    if (actionTask.IsFaulted && actionTask.Exception != null)
+      throw actionTask.Exception;
+  }
+
+  public static void AssertThrows<T>(
+    Action action, string additionalMessage = "") where T : Exception
+  {
+    try
+    {
+      action();
+    }
+    catch (T)
+    {
+      return;
+    }
+    catch (Exception ex)
+    {
+      throw new ValidationException(
+        $"Expected exception of type '{typeof(T)}', but got '{ex.GetType()}' instead. {additionalMessage}");
+    }
+
+    throw new ValidationException($"Expected exception of type '{typeof(T)}' was not thrown. {additionalMessage}");
+  }
+
 }

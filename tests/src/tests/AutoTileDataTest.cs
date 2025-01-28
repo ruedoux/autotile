@@ -12,9 +12,7 @@ public class AutoTileDataTest
   public void CanConnectTo_CorrectlyReturnsConnections_WhenSetup()
   {
     // Given
-    AutoTileData autoTileData = new(
-      new bool[] { false, true },
-      new Dictionary<byte, Vector2>[] { new(), new() });
+    AutoTileData autoTileData = new(new bool[] { false, true }, new());
 
     // When
     var shouldNotConnect = autoTileData.CanConnectTo(0);
@@ -29,13 +27,11 @@ public class AutoTileDataTest
   public void GetAtlasCoords_CorrectlyReturnCoords_WhenGivenCorrectPosition()
   {
     // Given
-    AutoTileData autoTileData = new(
-      new bool[] { true },
-      new Dictionary<byte, Vector2>[] { new() { { 2, Vector2.One } } });
+    AutoTileData autoTileData = new(new bool[] { true }, new() { { 2, Vector2.One } });
 
     // When
-    var shouldBeOne = autoTileData.GetAtlasCoords(0, 2);
-    var shouldBeDefault = autoTileData.GetAtlasCoords(0, 123);
+    var shouldBeOne = autoTileData.GetAtlasCoords(2);
+    var shouldBeDefault = autoTileData.GetAtlasCoords(123);
 
     // Then
     Assertions.AssertEqual(Vector2.One, shouldBeOne);

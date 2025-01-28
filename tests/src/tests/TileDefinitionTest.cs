@@ -29,17 +29,5 @@ public class TileDefinitionTest
       new(AutoTileGroup: 0),
       new(AutoTileGroup: 0),
       new(AutoTileGroup: 1));
-    SimpleEqualsVerifier.Verify<TileDefinition>(
-      new(BitmaskOverrides: new() { { "a", new() } }),
-      new(BitmaskOverrides: new() { { "a", new() } }),
-      new(BitmaskOverrides: new() { { "b", new() } }));
-    SimpleEqualsVerifier.Verify<TileDefinition>(
-      new(BitmaskOverrides: new() { { "a", new() { { 1, new(0, 0) } } } }),
-      new(BitmaskOverrides: new() { { "a", new() { { 1, new(0, 0) } } } }),
-      new(BitmaskOverrides: new() { { "a", new() { { 2, new(0, 0) } } } }));
-    SimpleEqualsVerifier.Verify<TileDefinition>(
-      new(BitmaskOverrides: new() { { "a", new() { { 1, new(0, 0) } } } }),
-      new(BitmaskOverrides: new() { { "a", new() { { 1, new(0, 0) } } } }),
-      new(BitmaskOverrides: new() { { "a", new() { { 1, new(1, 1) } } } }));
   }
 }

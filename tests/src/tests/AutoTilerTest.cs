@@ -21,7 +21,7 @@ public class AutoTilerTest
   public void PlaceTile_CorrectlyPlacesTile_WhenCalled()
   {
     // Given
-    AutoTileData autoTileData = new(new bool[] { true }, new Dictionary<byte, Vector2>[] { new() });
+    AutoTileData autoTileData = new(new bool[] { true }, new());
     AutoTiler autoTiler = new(1, new AutoTileData[] { autoTileData });
 
     // When
@@ -41,7 +41,7 @@ public class AutoTilerTest
   public void PlaceTile_CorrectlyPlacesTiles_WhenCalledAsync()
   {
     // Given
-    AutoTileData autoTileData = new(new bool[] { true }, new Dictionary<byte, Vector2>[] { new() });
+    AutoTileData autoTileData = new(new bool[] { true }, new());
     AutoTiler autoTiler = new(1, new AutoTileData[] { autoTileData });
 
     List<Vector2> positions = new();
@@ -78,7 +78,7 @@ public class AutoTilerTest
   public void PlaceTile_CorrectlyUpdatesBitmaskForSingleTile_WhenConnection()
   {
     // Given
-    AutoTileData autoTileData = new(new bool[] { true }, new Dictionary<byte, Vector2>[] { new() });
+    AutoTileData autoTileData = new(new bool[] { true }, new());
     AutoTiler autoTiler = new(1, new AutoTileData[] { autoTileData });
     HelperAutoTiler helperAutoTiler = new(autoTiler, 0, Vector2.Zero);
 
@@ -114,12 +114,8 @@ public class AutoTilerTest
   public void PlaceTile_CorrectlyUpdatesBitmaskForMultipleTiles_WhenConnection()
   {
     // Given
-    AutoTileData autoTileData1 = new(
-      new bool[] { true, true },
-      new Dictionary<byte, Vector2>[] { new(), new() });
-    AutoTileData autoTileData2 = new(
-      new bool[] { true, true },
-      new Dictionary<byte, Vector2>[] { new(), new() });
+    AutoTileData autoTileData1 = new(new bool[] { true, true }, new());
+    AutoTileData autoTileData2 = new(new bool[] { true, true }, new());
     AutoTiler autoTiler = new(1, new AutoTileData[] { autoTileData1, autoTileData2 });
     HelperAutoTiler helperAutoTiler = new(autoTiler, 0, Vector2.Zero);
 
@@ -154,12 +150,8 @@ public class AutoTilerTest
   public void PlaceTile_DoesntUpdateBitmaskForMultipleTiles_WhenNoConnection()
   {
     // Given
-    AutoTileData autoTileData1 = new(
-      new bool[] { true, false },
-      new Dictionary<byte, Vector2>[] { new(), new() });
-    AutoTileData autoTileData2 = new(
-      new bool[] { false, true },
-      new Dictionary<byte, Vector2>[] { new(), new() });
+    AutoTileData autoTileData1 = new(new bool[] { true, false }, new());
+    AutoTileData autoTileData2 = new(new bool[] { false, true }, new());
     AutoTiler autoTiler = new(1, new AutoTileData[] { autoTileData1, autoTileData2 });
     HelperAutoTiler helperAutoTiler = new(autoTiler, 0, Vector2Directions.Zero);
 

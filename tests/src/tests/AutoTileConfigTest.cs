@@ -20,10 +20,6 @@ public class AutoTileConfigTest
   const string AUTO_TILE_NAME2 = "ExampleTileName2";
   const string AUTO_TILE_FILE = "ExampleAutoTiled.jpg";
   const string AUTO_TILE_BITMASK = "ExampleBitmaskName";
-  static readonly Dictionary<string, Dictionary<byte, Vector2>>? AUTO_TILE_OVERRIDE = new()
-  {
-    {"ExampleTileName2", new() {{56,new(0,0)}}}
-  };
 
   const string TILESET_MOCK_PATH = "./resources/AutoTileConfig.json";
 
@@ -55,7 +51,7 @@ public class AutoTileConfigTest
       new TileDefinition(Layer: 0, ImageFileName: AUTO_TILE_FILE, AutoTileGroup: 0, BitmaskName: AUTO_TILE_BITMASK, PositionInSet: Vector2.Zero),
       autoTileConfig.TileDefinitions[AUTO_TILE_NAME1]);
     Assertions.AssertEqual(
-      new TileDefinition(Layer: 0, ImageFileName: AUTO_TILE_FILE, AutoTileGroup: 0, BitmaskName: AUTO_TILE_BITMASK, PositionInSet: new(TILE_SIZE * 6, 0), BitmaskOverrides: AUTO_TILE_OVERRIDE),
+      new TileDefinition(Layer: 0, ImageFileName: AUTO_TILE_FILE, AutoTileGroup: 0, BitmaskName: AUTO_TILE_BITMASK, PositionInSet: new(TILE_SIZE * 6, 0)),
       autoTileConfig.TileDefinitions[AUTO_TILE_NAME2]);
   }
 }

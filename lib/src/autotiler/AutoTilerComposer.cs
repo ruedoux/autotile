@@ -38,7 +38,7 @@ public class AutoTilerComposer
     foreach (var (tileIdentificator, tileResource) in tiles)
       autoTileIdToTileDatas[tileIdentificator.TileId] = new(
         autoTileGroupToConnections[tileResource.AutoTileGroup],
-        tiles[tileIdentificator].TileIdToBitmaskSets);
+        tiles[tileIdentificator].BitmaskSet);
 
     return autoTileIdToTileDatas;
   }

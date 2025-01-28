@@ -10,7 +10,7 @@ public class AutoTileDrawerTest
 {
   private static AutoTiler GetMockedAutoTiler(uint layerCount)
   {
-    AutoTileData autoTileData = new(new bool[] { true }, new Dictionary<byte, Vector2>[] { new() });
+    AutoTileData autoTileData = new(new bool[] { true }, new());
     return new(layerCount, new AutoTileData[] { autoTileData });
   }
 

@@ -74,7 +74,7 @@ public class AutoTiler
 
       var bitmask = GetTileBitmask(layer, position);
       data[layer][position] = new(
-        tileId, bitmask, tileIdToAutoTileData[tileId].GetAtlasCoords(tileId, Bitmask.Parse(bitmask)));
+        tileId, bitmask, tileIdToAutoTileData[tileId].GetAtlasCoords(Bitmask.Parse(bitmask)));
     }
 
     for (int i = 0; i < CELL_SURROUNDING_DIRECTIONS.Length; i++)
@@ -91,11 +91,10 @@ public class AutoTiler
     TileData? centerTile = GetTileDataAt(layer, centerPosition);
     bool canConnect = centerTile is not null && tileIdToAutoTileData[tileToUpdate.TileId].CanConnectTo(centerTile.TileId);
     byte bitmask = Bitmask.UpdateBitmask(tileToUpdate.Bitmask, updateDirection, canConnect);
-    int neighbourTileId = centerTile is not null ? centerTile.TileId : tileToUpdate.TileId;
     data[layer][updatePosition] = new(
       tileToUpdate.TileId,
       bitmask,
-      tileIdToAutoTileData[tileToUpdate.TileId].GetAtlasCoords(neighbourTileId, Bitmask.Parse(bitmask)));
+      tileIdToAutoTileData[tileToUpdate.TileId].GetAtlasCoords(Bitmask.Parse(bitmask)));
   }
 
   private byte GetTileBitmask(int layer, Vector2 position)

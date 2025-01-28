@@ -6,32 +6,28 @@
       "ImageFileName": "ExampleAutoTiled.jpg",
       "PositionInSet": "(0,0)",
       "BitmaskName": "ExampleBitmaskName",
-      "AutoTileGroup": 0,
-      "BitmaskOverrides": null
+      "AutoTileGroup": 0
     },
     "ExampleTileName2": {
       "Layer": 0,
       "ImageFileName": "ExampleAutoTiled.jpg",
       "PositionInSet": "(96,0)",
       "BitmaskName": "ExampleBitmaskName",
-      "AutoTileGroup": 0,
-      "BitmaskOverrides": { "ExampleTileName2": { "56": "(0,0)" } }
+      "AutoTileGroup": 0
     },
     "ExampleTileName3": {
       "Layer": 0,
       "ImageFileName": "ExampleSingle.png",
       "PositionInSet": "(0,0)",
       "BitmaskName": "SingleBitmaskName",
-      "AutoTileGroup": -1,
-      "BitmaskOverrides": null
+      "AutoTileGroup": -1
     },
     "ExampleTileName4": {
       "Layer": 0,
       "ImageFileName": "ExampleSingle.png",
       "PositionInSet": "(16,0)",
       "BitmaskName": "SingleBitmaskName",
-      "AutoTileGroup": -1,
-      "BitmaskOverrides": null
+      "AutoTileGroup": -1
     }
   },
   "BitmaskSets": {
